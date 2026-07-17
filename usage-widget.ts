@@ -12,14 +12,15 @@
  * uses (authStorage.fetchUsageReports), cached for 5 minutes. The widget only
  * appears when the active model's provider is `anthropic`.
  *
- * Tune the width threshold with OMP_USAGE_WIDGET_COLS (default 140): below
- * this many columns the widget shows, at or above it the built-in status-line
- * segment is assumed to fit and the widget hides.
+ * By default the widget is always visible (whenever an Anthropic model is
+ * active and a usage report exists). Set OMP_USAGE_WIDGET_COLS to a column
+ * count to switch to narrow-only mode: the widget then shows only below that
+ * width, deferring to the built-in `usage` status-line segment when wide.
  */
 import type { ExtensionAPI, ExtensionContext } from "@oh-my-pi/pi-coding-agent";
 
 const WIDGET_KEY = "claude-usage-line";
-const NARROW_COLS = Number(process.env.OMP_USAGE_WIDGET_COLS) || 140;
+const NARROW_COLS = Number(process.env.OMP_USAGE_WIDGET_COLS) || Number.POSITIVE_INFINITY;
 const FETCH_TTL_MS = 5 * 60_000;
 const RENDER_EVERY_MS = 30_000;
 
