@@ -11,13 +11,13 @@ omp's status line is a single row (the input editor's top border). On overflow i
 When the terminal is narrower than a threshold (default **140 columns**) and the active model's provider is **Anthropic**, the extension renders the usage windows on a dedicated line below the editor:
 
 ```
- 5h 74% (resets Fri 14:10) · 7d 7% (resets Mon 01:00)
+ 5h 74% (↻ Fri 14:10) · 7d 7% (↻ Mon 01:00)
 ```
 
 - Same data source as the built-in `usage` status-line segment (auth-broker usage reports), cached 5 minutes.
 - Same color thresholds: green < 50% ≤ yellow < 80% ≤ red.
 - Auto-hides when the terminal is wide (the status-line segment fits again), when a non-Anthropic model is active, or when no usage report is available.
-- Reset times are absolute local times ("resets Fri 14:10"), matching the Claude Code statusline format.
+- Reset times are absolute local times — "↻ Fri 14:10" means the window resets Friday at 14:10.
 - Re-renders on terminal resize, turn end, and every 30 seconds.
 
 ## Install
