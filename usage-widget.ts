@@ -39,14 +39,14 @@ export default function (api: ExtensionAPI) {
 
 	const color = (pct: number): string => (pct >= 80 ? "\x1b[31m" : pct >= 50 ? "\x1b[33m" : "\x1b[32m");
 
-	const fmtReset = (resetsAt: number | undefined, now: number): string => {
+	// Absolute local reset time ("resets Fri 14:10"), matching the Claude Code
+	// statusline format, instead of a relative countdown.
+	const fmtReset = (resetsAt: number | undefined): string => {
 		if (typeof resetsAt !== "number") return "";
-		const mins = Math.max(0, Math.round((resetsAt - now) / 60_000));
-		if (mins < 60) return ` (${mins}m)`;
-		const h = Math.floor(mins / 60);
-		if (h < 24) return ` (${h}h${mins % 60 ? ` ${mins % 60}m` : ""})`;
-		const d = Math.floor(h / 24);
-		return ` (${d}d${h % 24 ? ` ${h % 24}h` : ""})`;
+		const d = new Date(resetsAt);
+		const day = d.toLocaleDateString("en-US", { weekday: "short" });
+		const hm = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+		return ` (resets ${day} ${hm})`;
 	};
 
 	async function refresh(): Promise<void> {
@@ -88,13 +88,12 @@ export default function (api: ExtensionAPI) {
 			}
 			return;
 		}
-		const now = Date.now();
 		const parts: string[] = [];
 		if (fiveHour) {
-			parts.push(`5h ${color(fiveHour.percent)}${Math.round(fiveHour.percent)}%\x1b[0m${fmtReset(fiveHour.resetsAt, now)}`);
+			parts.push(`5h ${color(fiveHour.percent)}${Math.round(fiveHour.percent)}%\x1b[0m${fmtReset(fiveHour.resetsAt)}`);
 		}
 		if (sevenDay) {
-			parts.push(`7d ${color(sevenDay.percent)}${Math.round(sevenDay.percent)}%\x1b[0m${fmtReset(sevenDay.resetsAt, now)}`);
+			parts.push(`7d ${color(sevenDay.percent)}${Math.round(sevenDay.percent)}%\x1b[0m${fmtReset(sevenDay.resetsAt)}`);
 		}
 		ctx.ui.setWidget(WIDGET_KEY, [` ${parts.join(" · ")}`], { placement: "belowEditor" });
 		widgetShown = true;
