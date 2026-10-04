@@ -1,0 +1,11 @@
+{
+	"name": "omp-usage-widget",
+	"version": "1.0.0",
+	"description": "Oh My Pi extension: provider plan usage (Claude, Codex, Cursor, Antigravity) visible in narrow terminals.",
+	"license": "MIT",
+	"repository": "AnsCodeLab/omp-usage-widget",
+	"type": "module",
+	"omp": {
+		"extensions": ["./usage-widget.ts"]
+	}
+}
